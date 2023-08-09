@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Windows.Forms;
 
 namespace Code_Editor
@@ -40,6 +41,13 @@ namespace Code_Editor
                     "Configuration", "Console Title.cfg"));
                 if (consoleTitle != "Console Title")
                     consoleTitleTxt.Text = consoleTitle;
+
+                bool pause = Convert.ToBoolean(File.ReadAllText(Path.Combine(path, 
+                    "Configuration", "Pause.cfg")));
+
+                pauseAfterRunCompletionToolStripMenuItem.Text = $"Pause After " +
+                    $"Run Completion - {pause}";
+
                 UpdateTree();
             }
         }
@@ -111,6 +119,25 @@ namespace Code_Editor
 
         #region Menu Strip
 
+        private void pauseAfterRunCompletionToolStripMenuItem_Click
+            (object sender, EventArgs e)
+        {
+            bool value = !Convert.ToBoolean(File.ReadAllText(Path.Combine(path,
+                "Configuration", "Pause.cfg")));
+            File.WriteAllText(Path.Combine(path, "Configuration", "Pause.cfg"), 
+                value.ToString());
+
+            pauseAfterRunCompletionToolStripMenuItem.Text = $"Pause After " +
+                $"Run Completion - {value}";
+        }
+
+        private void allSettingsToolStripMenuItem_Click
+            (object sender, EventArgs e)
+        {
+            Settings form = new Settings(this);
+            form.Show();
+        }
+
         private void saveCurrentFileToolStripMenuItem_Click
             (object sender, EventArgs e)
         {
@@ -131,10 +158,11 @@ namespace Code_Editor
                 return;
             }
 
+            editorTxt.Text = string.Empty;
+            saveLbl.Hide();
             path = string.Empty;
             name = string.Empty;
             openFile = string.Empty;
-            editorTxt.Text = string.Empty;
             projectOpen = false;
             UpdateTree();
         }
@@ -155,7 +183,8 @@ namespace Code_Editor
             Run();
         }
 
-        private void newProjectToolStripMenuItem_Click(object sender, EventArgs e)
+        private void newProjectToolStripMenuItem_Click
+            (object sender, EventArgs e)
         {
             CreateNewProject();
         }
@@ -176,6 +205,15 @@ namespace Code_Editor
 
         private void openFileToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            if (!projectOpen)
+            {
+                Errors.NoOpenProject(Text);
+                return;
+            }
+
+            if (fileView.SelectedNode == null)
+                fileView.SelectedNode = fileView.Nodes[0];
+
             if (fileView.SelectedNode.ForeColor != Color.MediumSlateBlue)
             {
                 MessageBox.Show("Selected node was not a file.", 
@@ -204,10 +242,20 @@ namespace Code_Editor
 
         private void removeFileToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            string[] protectedDirsAndFiles = new string[3];
+            if (!projectOpen)
+            {
+                Errors.NoOpenProject(Text);
+                return;
+            }
+
+            if (fileView.SelectedNode == null)
+                fileView.SelectedNode = fileView.Nodes[0];
+
+            string[] protectedDirsAndFiles = new string[4];
             protectedDirsAndFiles[0] = name;
             protectedDirsAndFiles[1] = "Configuration";
             protectedDirsAndFiles[2] = "Console Title.cfg";
+            protectedDirsAndFiles[2] = "Pause.cfg";
 
             if (!protectedDirsAndFiles.Contains(fileView.SelectedNode.Text))
             {
@@ -234,6 +282,12 @@ namespace Code_Editor
         private void openFolderInFileExplorerToolStripMenuItem_Click
             (object sender, EventArgs e)
         {
+            if (!projectOpen)
+            {
+                Errors.NoOpenProject(Text);
+                return;
+            }
+
             Process.Start(path);
         }
 
@@ -360,7 +414,7 @@ namespace Code_Editor
             int origPathLength = path.Split('\\').Length;
             int pathLength = origPathLength;
 
-            string ignoreDirs = "Settings";
+            string ignoreDirs = "Configuration";
 
             List<string> dirs = FileUtils.ProcessDirectory
                 (path, ignoreDirs.Split('\n'), false);
@@ -461,6 +515,12 @@ namespace Code_Editor
             newProjectLbl.Hide();
             openProjectLbl.Hide();
 
+            bool pause = Convert.ToBoolean(File.ReadAllText(Path.Combine(path,
+                "Configuration", "Pause.cfg")));
+
+            pauseAfterRunCompletionToolStripMenuItem.Text = $"Pause After " +
+                $"Run Completion - {pause}";
+
             infoLbl.Hide();
         }
 
@@ -481,8 +541,96 @@ namespace Code_Editor
 
         private void editorTxt_TextChanged(object sender, EventArgs e)
         {
-            label1.Text = new FileInfo(openFile).Name + " *";
-            label1.Font = new Font(label1.Font, FontStyle.Bold);
+            if (openFile != string.Empty)
+            {
+                label1.Text = new FileInfo(openFile).Name + " *";
+                label1.Font = new Font(label1.Font, FontStyle.Bold);
+            }
+
+            string rKeywords = @"\b(if|else if|else|for|while)\b";
+            MatchCollection rKeywordMatches = Regex.Matches(editorTxt.Text, rKeywords);
+
+            string functions = @"\b(Printf)\b";
+            MatchCollection functionMatches = Regex.Matches(editorTxt.Text, functions);
+
+            string keywords = @"\b(return|class|func)\b";
+
+            MatchCollection keywordMatches = Regex.Matches(editorTxt.Text, keywords);
+
+            string types = @"\b(int|string|float|bool|true|false)\b";
+            MatchCollection typeMatches = Regex.Matches(editorTxt.Text, types);
+
+            string classes = @"\b(Math)\b";
+            MatchCollection classMatches = Regex.Matches(editorTxt.Text, classes);
+
+            //string imports = @"#.+?$";
+            //MatchCollection importMatches = Regex.Matches(editorTxt.Text, imports, RegexOptions.Multiline);
+
+            string strings = "\".+?\"";
+            MatchCollection stringMatches = Regex.Matches(editorTxt.Text, strings);
+
+            int originalIndex = editorTxt.SelectionStart;
+            int originalLength = editorTxt.SelectionLength;
+            Color originalColor = Color.White;
+
+            editorTxt.SelectionStart = 0;
+            editorTxt.SelectionLength = editorTxt.Text.Length;
+            editorTxt.SelectionColor = originalColor;
+
+            foreach (Match m in rKeywordMatches)
+            {
+                editorTxt.SelectionStart = m.Index;
+                editorTxt.SelectionLength = m.Length;
+                editorTxt.SelectionColor = Color.LightPink;
+            }
+
+            foreach (Match m in functionMatches)
+            {
+                editorTxt.SelectionStart = m.Index;
+                editorTxt.SelectionLength = m.Length;
+                editorTxt.SelectionColor = Color.Yellow;
+            }
+
+            foreach (Match m in keywordMatches)
+            {
+                editorTxt.SelectionStart = m.Index;
+                editorTxt.SelectionLength = m.Length;
+                editorTxt.SelectionColor = Color.LightBlue;
+            }
+
+            foreach (Match m in typeMatches)
+            {
+                editorTxt.SelectionStart = m.Index;
+                editorTxt.SelectionLength = m.Length;
+                editorTxt.SelectionColor = Color.DarkCyan;
+            }
+
+            foreach (Match m in classMatches)
+            {
+                editorTxt.SelectionStart = m.Index;
+                editorTxt.SelectionLength = m.Length;
+                editorTxt.SelectionColor = Color.Green;
+            }
+
+            //foreach (Match m in importMatches)
+            //{
+            //    editorTxt.SelectionStart = m.Index;
+            //    editorTxt.SelectionLength = m.Length;
+            //    editorTxt.SelectionColor = Color.Gray;
+            //}
+
+            foreach (Match m in stringMatches)
+            {
+                editorTxt.SelectionStart = m.Index;
+                editorTxt.SelectionLength = m.Length;
+                editorTxt.SelectionColor = Color.Orange;
+            }
+
+            editorTxt.SelectionStart = originalIndex;
+            editorTxt.SelectionLength = originalLength;
+            editorTxt.SelectionColor = originalColor;
+
+            editorTxt.Focus();
         }
     }
 }

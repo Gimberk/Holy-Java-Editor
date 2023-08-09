@@ -35,6 +35,7 @@ namespace Code_Editor
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.newFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.closeFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.removeFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.openFolderInFileExplorerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -44,22 +45,22 @@ namespace Code_Editor
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.newProjectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.closeProjectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.removeStartupProjectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.saveCurrentFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.projectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.buildToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.runToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.settingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.generalSettingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.consoleTitleTxt = new System.Windows.Forms.ToolStripTextBox();
+            this.pauseAfterRunCompletionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openProjectLbl = new System.Windows.Forms.Label();
             this.openProjectBtn = new System.Windows.Forms.PictureBox();
             this.newProjectLbl = new System.Windows.Forms.Label();
             this.newProjectBtn = new System.Windows.Forms.PictureBox();
             this.fileView = new System.Windows.Forms.TreeView();
-            this.closeFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.closeProjectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.removeStartupProjectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.settingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.generalSettingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.consoleTitleTxt = new System.Windows.Forms.ToolStripTextBox();
-            this.saveCurrentFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.label1 = new System.Windows.Forms.Label();
             this.contextMenuStrip1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
@@ -69,6 +70,7 @@ namespace Code_Editor
             // 
             // editorTxt
             // 
+            this.editorTxt.AcceptsTab = true;
             this.editorTxt.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
@@ -109,6 +111,13 @@ namespace Code_Editor
             this.openFileToolStripMenuItem.Size = new System.Drawing.Size(223, 22);
             this.openFileToolStripMenuItem.Text = "Open File";
             this.openFileToolStripMenuItem.Click += new System.EventHandler(this.openFileToolStripMenuItem_Click);
+            // 
+            // closeFileToolStripMenuItem
+            // 
+            this.closeFileToolStripMenuItem.Name = "closeFileToolStripMenuItem";
+            this.closeFileToolStripMenuItem.Size = new System.Drawing.Size(223, 22);
+            this.closeFileToolStripMenuItem.Text = "Close File";
+            this.closeFileToolStripMenuItem.Click += new System.EventHandler(this.closeFileToolStripMenuItem_Click);
             // 
             // removeFileToolStripMenuItem
             // 
@@ -192,6 +201,27 @@ namespace Code_Editor
             this.newProjectToolStripMenuItem.Text = "New Project";
             this.newProjectToolStripMenuItem.Click += new System.EventHandler(this.newProjectToolStripMenuItem_Click);
             // 
+            // closeProjectToolStripMenuItem
+            // 
+            this.closeProjectToolStripMenuItem.Name = "closeProjectToolStripMenuItem";
+            this.closeProjectToolStripMenuItem.Size = new System.Drawing.Size(198, 22);
+            this.closeProjectToolStripMenuItem.Text = "Close Project";
+            this.closeProjectToolStripMenuItem.Click += new System.EventHandler(this.closeProjectToolStripMenuItem_Click);
+            // 
+            // removeStartupProjectToolStripMenuItem
+            // 
+            this.removeStartupProjectToolStripMenuItem.Name = "removeStartupProjectToolStripMenuItem";
+            this.removeStartupProjectToolStripMenuItem.Size = new System.Drawing.Size(198, 22);
+            this.removeStartupProjectToolStripMenuItem.Text = "Remove Startup Project";
+            this.removeStartupProjectToolStripMenuItem.Click += new System.EventHandler(this.removeStartupProjectToolStripMenuItem_Click);
+            // 
+            // saveCurrentFileToolStripMenuItem
+            // 
+            this.saveCurrentFileToolStripMenuItem.Name = "saveCurrentFileToolStripMenuItem";
+            this.saveCurrentFileToolStripMenuItem.Size = new System.Drawing.Size(198, 22);
+            this.saveCurrentFileToolStripMenuItem.Text = "Save Current File";
+            this.saveCurrentFileToolStripMenuItem.Click += new System.EventHandler(this.saveCurrentFileToolStripMenuItem_Click);
+            // 
             // exitToolStripMenuItem
             // 
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
@@ -211,16 +241,47 @@ namespace Code_Editor
             // buildToolStripMenuItem
             // 
             this.buildToolStripMenuItem.Name = "buildToolStripMenuItem";
-            this.buildToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.buildToolStripMenuItem.Size = new System.Drawing.Size(101, 22);
             this.buildToolStripMenuItem.Text = "Build";
             this.buildToolStripMenuItem.Click += new System.EventHandler(this.buildToolStripMenuItem_Click);
             // 
             // runToolStripMenuItem
             // 
             this.runToolStripMenuItem.Name = "runToolStripMenuItem";
-            this.runToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.runToolStripMenuItem.Size = new System.Drawing.Size(101, 22);
             this.runToolStripMenuItem.Text = "Run";
             this.runToolStripMenuItem.Click += new System.EventHandler(this.runToolStripMenuItem_Click);
+            // 
+            // settingsToolStripMenuItem
+            // 
+            this.settingsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.generalSettingsToolStripMenuItem});
+            this.settingsToolStripMenuItem.Name = "settingsToolStripMenuItem";
+            this.settingsToolStripMenuItem.Size = new System.Drawing.Size(61, 20);
+            this.settingsToolStripMenuItem.Text = "Settings";
+            // 
+            // generalSettingsToolStripMenuItem
+            // 
+            this.generalSettingsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.consoleTitleTxt,
+            this.pauseAfterRunCompletionToolStripMenuItem});
+            this.generalSettingsToolStripMenuItem.Name = "generalSettingsToolStripMenuItem";
+            this.generalSettingsToolStripMenuItem.Size = new System.Drawing.Size(159, 22);
+            this.generalSettingsToolStripMenuItem.Text = "General Settings";
+            // 
+            // consoleTitleTxt
+            // 
+            this.consoleTitleTxt.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.consoleTitleTxt.Name = "consoleTitleTxt";
+            this.consoleTitleTxt.Size = new System.Drawing.Size(100, 23);
+            this.consoleTitleTxt.Text = "Console Title";
+            // 
+            // pauseAfterRunCompletionToolStripMenuItem
+            // 
+            this.pauseAfterRunCompletionToolStripMenuItem.Name = "pauseAfterRunCompletionToolStripMenuItem";
+            this.pauseAfterRunCompletionToolStripMenuItem.Size = new System.Drawing.Size(224, 22);
+            this.pauseAfterRunCompletionToolStripMenuItem.Text = "Pause After Run Completion";
+            this.pauseAfterRunCompletionToolStripMenuItem.Click += new System.EventHandler(this.pauseAfterRunCompletionToolStripMenuItem_Click);
             // 
             // openProjectLbl
             // 
@@ -286,57 +347,6 @@ namespace Code_Editor
             this.fileView.Name = "fileView";
             this.fileView.Size = new System.Drawing.Size(327, 659);
             this.fileView.TabIndex = 8;
-            // 
-            // closeFileToolStripMenuItem
-            // 
-            this.closeFileToolStripMenuItem.Name = "closeFileToolStripMenuItem";
-            this.closeFileToolStripMenuItem.Size = new System.Drawing.Size(223, 22);
-            this.closeFileToolStripMenuItem.Text = "Close File";
-            this.closeFileToolStripMenuItem.Click += new System.EventHandler(this.closeFileToolStripMenuItem_Click);
-            // 
-            // closeProjectToolStripMenuItem
-            // 
-            this.closeProjectToolStripMenuItem.Name = "closeProjectToolStripMenuItem";
-            this.closeProjectToolStripMenuItem.Size = new System.Drawing.Size(198, 22);
-            this.closeProjectToolStripMenuItem.Text = "Close Project";
-            this.closeProjectToolStripMenuItem.Click += new System.EventHandler(this.closeProjectToolStripMenuItem_Click);
-            // 
-            // removeStartupProjectToolStripMenuItem
-            // 
-            this.removeStartupProjectToolStripMenuItem.Name = "removeStartupProjectToolStripMenuItem";
-            this.removeStartupProjectToolStripMenuItem.Size = new System.Drawing.Size(198, 22);
-            this.removeStartupProjectToolStripMenuItem.Text = "Remove Startup Project";
-            this.removeStartupProjectToolStripMenuItem.Click += new System.EventHandler(this.removeStartupProjectToolStripMenuItem_Click);
-            // 
-            // settingsToolStripMenuItem
-            // 
-            this.settingsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.generalSettingsToolStripMenuItem});
-            this.settingsToolStripMenuItem.Name = "settingsToolStripMenuItem";
-            this.settingsToolStripMenuItem.Size = new System.Drawing.Size(61, 20);
-            this.settingsToolStripMenuItem.Text = "Settings";
-            // 
-            // generalSettingsToolStripMenuItem
-            // 
-            this.generalSettingsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.consoleTitleTxt});
-            this.generalSettingsToolStripMenuItem.Name = "generalSettingsToolStripMenuItem";
-            this.generalSettingsToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.generalSettingsToolStripMenuItem.Text = "General Settings";
-            // 
-            // consoleTitleTxt
-            // 
-            this.consoleTitleTxt.Font = new System.Drawing.Font("Segoe UI", 9F);
-            this.consoleTitleTxt.Name = "consoleTitleTxt";
-            this.consoleTitleTxt.Size = new System.Drawing.Size(100, 23);
-            this.consoleTitleTxt.Text = "Console Title";
-            // 
-            // saveCurrentFileToolStripMenuItem
-            // 
-            this.saveCurrentFileToolStripMenuItem.Name = "saveCurrentFileToolStripMenuItem";
-            this.saveCurrentFileToolStripMenuItem.Size = new System.Drawing.Size(198, 22);
-            this.saveCurrentFileToolStripMenuItem.Text = "Save Current File";
-            this.saveCurrentFileToolStripMenuItem.Click += new System.EventHandler(this.saveCurrentFileToolStripMenuItem_Click);
             // 
             // label1
             // 
@@ -411,6 +421,7 @@ namespace Code_Editor
         private System.Windows.Forms.ToolStripTextBox consoleTitleTxt;
         private System.Windows.Forms.ToolStripMenuItem saveCurrentFileToolStripMenuItem;
         private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.ToolStripMenuItem pauseAfterRunCompletionToolStripMenuItem;
     }
 }
 

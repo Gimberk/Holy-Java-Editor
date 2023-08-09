@@ -46,6 +46,8 @@ namespace Code_Editor
             File.WriteAllText(Path.Combine(path, "Main.hjm"), string.Empty);
             File.WriteAllText(Path.Combine(path, "Configuration", 
                 "Console Title.cfg"), "Console Title");
+            File.WriteAllText(Path.Combine(path, "Configuration",
+                "Pause.cfg"), "True");
 
             main.name = projectNameTxt.Texts;
             main.path = path;
